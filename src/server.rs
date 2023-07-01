@@ -75,6 +75,11 @@ pub struct AshfurQuery {
 #[derive(Serialize, Deserialize, TS)]
 #[ts(export, export_to = ".generated/QueryInner.ts")]
 pub enum QueryInner {
+    /// Test query
+    Test {
+        /// Echo string
+        echo: String,
+    },
     /// Internal cases, filtered by a user id
     InternalCasesFilterByUserId {
         user_id: String,
@@ -93,6 +98,7 @@ async fn query(
         .map_err(|e| (StatusCode::UNAUTHORIZED, e.to_string()))?;
 
     match query.query {
+        QueryInner::Test { echo } => Ok(AshfurResponse::Content(echo.to_string())),
         QueryInner::InternalCasesFilterByUserId { user_id } => {
             let cases = InternalCases::get(&state.data, doc! { "user": user_id }, None)
                 .await
