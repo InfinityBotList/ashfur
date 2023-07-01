@@ -1,0 +1,8 @@
+language: rust
+project: "ashfur"
+binary: "ashfur"
+service: "ashfur"
+lang_opts:
+  bindings: "/iblcdn/public/dev/bindings/ashfur"
+env:
+  DATABASE_URL: postgres://localhost/infinity  
