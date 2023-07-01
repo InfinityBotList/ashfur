@@ -9,6 +9,7 @@ use axum::{
 };
 use axum_macros::debug_handler;
 use log::info;
+use mongodb::bson::doc;
 use serde::{Deserialize, Serialize};
 use tower_http::cors::{Any, CorsLayer};
 use ts_rs::TS;
@@ -16,7 +17,7 @@ use ts_rs::TS;
 use crate::{
     authkit,
     mongoschemas::{core::Model, internal_cases::InternalCases},
-    Data, Error,
+    Data,
 };
 
 struct AppState {
@@ -91,5 +92,20 @@ async fn query(
         .await
         .map_err(|e| (StatusCode::UNAUTHORIZED, e.to_string()))?;
 
-    Err((StatusCode::NOT_IMPLEMENTED, "Not implemented".into()))
+    match query.query {
+        QueryInner::InternalCasesFilterByUserId { user_id } => {
+            let cases = InternalCases::get(&state.data, doc! { "user": user_id }, None)
+                .await
+                .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+
+            Ok(AshfurResponse::Content(
+                serde_json::to_string(&cases).map_err(|e| {
+                    (
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                        format!("Failed to serialize cases: {}", e),
+                    )
+                })?,
+            ))
+        }
+    }
 }

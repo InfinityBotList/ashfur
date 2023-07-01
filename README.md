@@ -1,3 +1,3 @@
 # Ashfur
 
-API service that provides specific misc data from databases such as our MongoDB database etc.
+Data aggregator API service to provide data from all our databases including Postgres, MongoDB database etc.

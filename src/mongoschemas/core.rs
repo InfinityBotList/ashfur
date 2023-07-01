@@ -9,7 +9,7 @@ use crate::{Data, Error};
 pub trait Model {
     fn collection_name() -> &'static str;
 
-    async fn get(data: &Data, filter: Document, opts: FindOptions) -> Result<Vec<Self>, Error>
+    async fn get(data: &Data, filter: Document, opts: Option<FindOptions>) -> Result<Vec<Self>, Error>
     where
         Self: Sync + Sized,
         for<'de> Self: Deserialize<'de>,
