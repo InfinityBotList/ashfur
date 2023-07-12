@@ -14,9 +14,17 @@ pub trait Model {
         Self: Sync + Sized,
         for<'de> Self: Deserialize<'de>,
     {
+        let db = data.mongo.default_database();
+
+        if db.is_none() {
+            return Err("No database set in connstring".into());
+        }
+
+        let db = db.unwrap();
+
         let collection = data
             .mongo
-            .database(Self::collection_name())
+            .database(db.name())
             .collection(Self::collection_name());
 
         let result = collection.find(filter, opts).await?;

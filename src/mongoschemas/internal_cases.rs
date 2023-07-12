@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InternalCases {
-    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "_id")]
     /// The unique ID of the document in the database
-    pub id: Option<ObjectId>,
+    pub id: ObjectId,
 
     /// The user ID of the user who the case was created for
     pub user: String,
@@ -24,20 +24,32 @@ pub struct InternalCases {
     pub moderator: String,
 
     /// The case ID
-    pub case_id: u64,
+    pub case: u64,
 
-    /// The time of the case (?)
+    #[serde(deserialize_with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime::deserialize")]
+    pub created: chrono::DateTime<chrono::Utc>,
+
+    #[serde(skip)]
+    /// The time of the case
     pub time: String,
 
-    /// The duration of the case (?)
+    /// The duration of the case, e.g. 3 Months
     pub duration: String,
 
-    #[serde(with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime")]
-    pub created: chrono::DateTime<chrono::Utc>,
+    /// Level of the infraction
+    pub level: String,
+
+    #[serde(skip)]
+    /// Start of the infraction
+    pub start: String,
+
+    #[serde(skip)]
+    /// End of the infraction
+    pub end: String,
 }
 
 impl Model for InternalCases {
     fn collection_name() -> &'static str {
-        "internal_cases"
+        "internalcases"
     }
 }

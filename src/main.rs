@@ -26,6 +26,8 @@ async fn main() {
         .await
         .expect("Error parsing MongoDB URL");
 
+    println!("Connecting to MongoDB at {:?}", mongo_client_options);
+
     let data = Data {
         pool: PgPoolOptions::new()
             .max_connections(MAX_CONNECTIONS)
