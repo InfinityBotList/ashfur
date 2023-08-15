@@ -7,19 +7,10 @@ use crate::Error;
 /// Global config object
 pub static CONFIG: Lazy<Config> = Lazy::new(|| Config::load().expect("Failed to load config"));
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct Config {
     pub mongodb_url: String,
     pub database_url: String,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            mongodb_url: String::from(""),
-            database_url: String::from(""),
-        }
-    }
 }
 
 impl Config {

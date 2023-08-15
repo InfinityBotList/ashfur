@@ -98,7 +98,7 @@ async fn query(
         .map_err(|e| (StatusCode::UNAUTHORIZED, e.to_string()))?;
 
     match query.query {
-        QueryInner::Test { echo } => Ok(AshfurResponse::Content(echo.to_string())),
+        QueryInner::Test { echo } => Ok(AshfurResponse::Content(echo)),
         QueryInner::InternalCasesFilterByUserId { user_id } => {
             let cases = InternalCases::get(&state.data, doc! { "user": user_id }, None)
                 .await
